@@ -229,6 +229,13 @@ class Packet {
           if (this.Host.checkIfConnected(peers[i])) {
             this.sendPacket(peers[i], p.data, p.len);
             this.sendPacket(peers[i], p2.data, p2.len);
+
+            let player2 = this.#main.players.get(peers[i]);
+            if (world.owner.length > 0) {
+              console.log('a')
+              if (player2.tankIDName === world.owner)
+                player2.removeRole('worldOwner');
+            }
           }
         }
       }
@@ -514,7 +521,7 @@ class Packet {
           .float(currentPlayer.clothes.hair, currentPlayer.clothes.shirt, currentPlayer.clothes.pants)
           .float(currentPlayer.clothes.feet, currentPlayer.clothes.face, currentPlayer.clothes.hand)
           .float(currentPlayer.clothes.back, currentPlayer.clothes.mask, currentPlayer.clothes.necklace)
-          .intx(player.skinColor)
+          .intx(currentPlayer.skinColor)
           .float(0, 0, 0)
           .end();
 
@@ -552,6 +559,23 @@ class Packet {
     data.writeIntLE(0, string.length + 4, 1);
 
     this.sendPacket(peer, data, data.length);
+  }
+
+  setNickname(peerid, nickname) {
+    let player = this.#main.players.get(peerid);
+
+    for (let peer of [...this.#main.players.keys()]) {
+      if (this.#main.Host.isInSameWorld(peerid, peer) && this.#main.Host.checkIfConnected(peer)) {
+        let p2 = p.create()
+          .string('OnNameChanged')
+          .string(nickname)
+          .end()
+          .return();
+        p2.data.writeIntLE(player.netID, 8, 4);
+        this.sendPacket(peer, p2.data, p2.len);
+        p.reconstruct();
+      }
+    }
   }
 };
 

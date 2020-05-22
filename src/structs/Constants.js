@@ -7,14 +7,16 @@ module.exports = {
 
   Permissions: {
     user: 1,
-    mod: 2,
-    admin: 4
+    worldOwner: 2,
+    mod: 4,
+    admin: 8
   },
 
   ItemEffects: {
     Fist: 0x808000,
     'Cyclopean Visor': 0x808001,
     'Heart Bow': 0x808002,
+    'Golden Heartbow': 0x808002,
     'Tommy Gun': 0x808003,
     'Elvish Longbow': 0x808004,
     'Sawed-Off Shotgun': 0x808005,

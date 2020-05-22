@@ -21,7 +21,9 @@
   "homepage": "https://github.com/Alexander9673/gtps-wrapper#readme",
   "dependencies": {
     "better-sqlite-pool": "^0.3.0",
+    "enet": "^0.2.9",
     "enmap": "^5.2.4",
+    "node-addon-api": "^3.0.0",
     "restana": "^4.3.4"
   }
 }

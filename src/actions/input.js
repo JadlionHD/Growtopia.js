@@ -33,8 +33,8 @@ module.exports = function(main, packet, peerid, p) {
       };
     }
 
-    if (player.displayName[2] === '@')
-      msg += "`^";
+    if (player.roles.includes('mod') || player.roles.includes('admin'))
+      msg += '`^';
 
     msg += text;
     msg = msg.trim().split(/ +/g).join(' ');

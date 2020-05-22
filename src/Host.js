@@ -130,6 +130,7 @@ class Host extends EventEmitter {
       console.log('Saving worlds to Database...');
       for (let [name, world] of this.#main.worlds) {
         world.players = [];
+        world.breakLevel = 0;
 
         this.#main.worldsDB.set(name, world);
         this.#main.worlds.delete(name);

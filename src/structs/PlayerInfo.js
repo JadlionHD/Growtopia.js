@@ -34,6 +34,7 @@ class PlayerInfo {
 			peerid: "",
 			MovementCount: 0
 		};
+		this.friends = [];
 
 		this.clothes = {
 			hair: 0,
@@ -85,6 +86,28 @@ class PlayerInfo {
 	removePunchEffect(effect) {
 		if (this.punchEffects.includes(effect))
 			this.punchEffects = this.punchEffects.filter(p => p.toLowerCase() !== effect.toLowerCase());
+
+		this.#main.players.set(this.temp.peerid, this);
+	}
+
+	addRole(role) {
+		let perm = Constants.Permissions[role];
+
+		if (perm) {
+			this.permissions |= perm;
+			this.roles.push(role);
+		};
+
+		this.#main.players.set(this.temp.peerid, this);
+	}
+
+	removeRole(role) {
+		let perm = Constants.Permissions[role];
+
+		if (perm) {
+			this.permissions ^= perm;
+			this.roles = this.roles.filter(r => r !== role);
+		}
 
 		this.#main.players.set(this.temp.peerid, this);
 	}

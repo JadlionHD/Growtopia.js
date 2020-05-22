@@ -180,13 +180,13 @@ module.exports = {
         player.hasClothesUpdated = false;
         player.permissions = player.isGuest ? 0 : (player.permissions === 0 ? 1 : player.permissions)
 
-        if (player.roles.length < 1) {
-          if (player.permissions === 0 || player.permissions < 0) {
+        if (player.roles.length <= 1) {
+          if (player.permissions <= 0) {
             player.roles.push('guest');
           };
 
           for (let perm of Object.keys(Constants.Permissions)) {
-            if (player.permissions === 0 || player.permissions < 0) continue;
+            if (player.permissions <= 0) continue;
             let calculatedPerm = player.permissions & Constants.Permissions[perm];
 
             if (player.roles.includes(perm))

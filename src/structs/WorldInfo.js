@@ -8,6 +8,8 @@ class WorldInfo {
     this.items = [];
     this.players = [];
     this.signs = [];
+    this.bannedPlayers = [];
+    this.bannedGuests = [];
   }
 };
 

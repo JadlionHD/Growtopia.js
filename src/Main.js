@@ -4,12 +4,19 @@ const WorldItem = require('./structs/WorldItem');
 const WorldInfo = require('./structs/WorldInfo');
 const CONSTANTS = require('./structs/Constants');
 const PacketCreator = require('./PacketCreator');
-const Endb = require('enmap');
-const { exec } = require('child_process');
+const { execSync, exec } = require('child_process');
 
 let p = new PacketCreator();
 let netID = 0;
 let items = new Map();
+let Enmap;
+
+try {
+  Enmap = require('enmap');
+  require('better-sqlite3');
+} catch (e) {
+  throw new Error('enmap or better-sqlite-pool is not installed. Kindly install it with "npm install enmap" or "npm install better-sqlite-pool". To increase installation speed, kindly add "-j 8" to use 8 threads when building the sqlite module.');
+};
 
 /**
  * The Main Class is the file that you would require to handle everything.
@@ -29,7 +36,6 @@ let items = new Map();
 
 class Main extends EventEmitter {
   #gtps;
-  #os = process.platform;
   #isInitialized;
   #version;
   #loadCommands = function() {
@@ -63,7 +69,19 @@ class Main extends EventEmitter {
 
   constructor(options = {}) {
     super(options);
-    this.#gtps = require(`../packages/${this.#os}/${process.version.slice(1).split('.')[0]}/gtps.node`);
+    this.#gtps;
+
+    try {
+      this.#gtps = require('../lib/build/Release/gtps.node');
+    } catch(e) {
+      console.log('gtps.node can\'t be found. Will build the C++ Module.\nBuilding...');
+
+      execSync(`node-gyp rebuild -j 8 --directory=lib`);
+      console.log('Done building! Will close process.');
+
+      process.exit(0);
+    };
+
     this.#version = this.#gtps.version;
 
     Object.defineProperties(this, {
@@ -139,7 +157,7 @@ class Main extends EventEmitter {
        */
 
       playersDB: {
-        value: new Endb({
+        value: new Enmap({
           name: 'players'
         })
       },
@@ -149,7 +167,7 @@ class Main extends EventEmitter {
        */
 
       worldsDB: {
-        value: new Endb({
+        value: new Enmap({
           name: 'worlds'
         })
       },
@@ -509,7 +527,7 @@ class Main extends EventEmitter {
       if (itemsDatVersion >= 11) {
         const punchOptionsLength = data.readInt16LE(mempos);
         mempos += 2;
-
+        
         for (var y = 0; y < punchOptionsLength; y++) {
           punchOptions += String.fromCharCode(data[mempos]);
           mempos += 1;
@@ -565,9 +583,6 @@ class Main extends EventEmitter {
     for (let item of items) {
       this.getItems().set(item.itemID, item);
     }
-
-    const { writeFileSync } = require('fs');
-    //writeFileSync('test.json', JSON.stringify(items, null, 2))
 
     return buf.data;
   }

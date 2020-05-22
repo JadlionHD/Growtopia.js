@@ -10,12 +10,13 @@ module.exports = function(main, packet, peerid, p) {
 
   player = player[0];
 
-  let playerRole = player.roles[player.roles.length - 1];
-  playerRole[0] = playerRole[0].toUpperCase();
-
   let dialog = main.Dialog.defaultColor()
-    .addLabelWithIcon(player.tankIDName ? player.tankIDName : player.requestedName, '', 'small')
-    .addTextBox(`This user is a ${playerRole}.`)
+    .addLabelWithIcon(player.isGuest ? player.requestedName : player.displayName, '18', 'Big')
+    .addSpacer('small')
+    .addButton('addFriend', 'Add as Friend')
+    .addButton('worldBan', '`4World Ban')
+    .endDialog('editPlayer', 'Cancel', '')
+    .embed('player', player.isGuest ? player.mac : player.tankIDName)
     .addQuickExit();
 
   if (netID && !isNaN(netID)) {

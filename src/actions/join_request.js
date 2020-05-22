@@ -60,6 +60,15 @@ module.exports = function(main, packet, peerid, p) {
 
   main.players.set(peerid, player);
 
+  let ownsWorld = player.isGuest ? false : player.tankIDName === world.owner;
+  if (ownsWorld) {
+    player.displayName = `\`2${player.displayName}`;
+    
+    // extra check
+    if (!player.roles.includes('worldOwner'))
+      player.addRole('worldOwner');
+  }
+
   p.create()
     .string('OnSpawn')
     .string(`spawn|avatar\nnetID|${player.netID}\nuserID|${player.netID}\ncolrect|0|0|20|30\nposXY|${x}|${y}\nname|\`\`${player.displayName}\`\`\ninvis|0\nmstate|0\nsmstate|0\ntype|local\n`)

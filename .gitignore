@@ -115,3 +115,14 @@ data
 # Item database
 items.json
 items.dat
+
+# c++ module
+lib/b.js
+lib/file.space
+lib/package-lock.json
+lib/x.js
+lib/README.module
+lib/items.dat
+build
+
+benchmark.js
