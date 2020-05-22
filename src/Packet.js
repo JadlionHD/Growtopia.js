@@ -232,7 +232,6 @@ class Packet {
 
             let player2 = this.#main.players.get(peers[i]);
             if (world.owner.length > 0) {
-              console.log('a')
               if (player2.tankIDName === world.owner)
                 player2.removeRole('worldOwner');
             }
